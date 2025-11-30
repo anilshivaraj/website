@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
     const dummyData = {
         flows: {
             total: 150,
-            screen: 45,
+            screen: 46,
             autoLaunched: 60,
-            triggered: 45
+            triggered: 44
         },
         apex: {
             total: 320,
