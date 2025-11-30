@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> | Salesforce Health
+    </title>
+    <meta name="description" content="Salesforce Org Health Dashboard">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-chart-line"></i></span>
+                Salesforce Health
+            </a>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="/" class="<%= title === 'Dashboard' ? 'active' : '' %>">Dashboard</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <div class="mobile-nav-overlay">
+            <nav class="mobile-nav">
+                <button class="close-menu" aria-label="Close Menu"><i class="fa-solid fa-times"></i></button>
+                <ul class="mobile-nav-list">
+                    <li><a href="/">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>

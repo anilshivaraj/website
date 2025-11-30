@@ -1,0 +1,349 @@
+<%- include('partials/header') %>
+
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Salesforce Performance Dashboard</h1>
+
+        <div class="metrics-grid">
+            <!-- Flows Card -->
+            <div class="metric-card">
+                <h2>Flows Overview</h2>
+                <div class="metric-summary">
+                    <span class="total-count">
+                        <%= data.flows.total %>
+                    </span>
+                    <span class="label">Total Flows</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="flowsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Apex Card -->
+            <div class="metric-card">
+                <h2>Apex Classes</h2>
+                <div class="metric-summary">
+                    <span class="total-count">
+                        <%= data.apex.total %>
+                    </span>
+                    <span class="label">Total Classes</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="apexChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Org Health Card -->
+            <div class="metric-card health-card">
+                <h2>Org Health</h2>
+                <div class="health-metrics">
+                    <div class="health-item">
+                        <span class="health-label">Code Coverage</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: <%= data.health.codeCoverage %>%"></div>
+                        </div>
+                        <span class="health-value">
+                            <%= data.health.codeCoverage %>%
+                        </span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Storage Usage</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: <%= data.health.storage %>%"></div>
+                        </div>
+                        <span class="health-value">
+                            <%= data.health.storage %>%
+                        </span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">SOQL Usage</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: <%= data.health.governorLimits.soql %>%"></div>
+                        </div>
+                        <span class="health-value">
+                            <%= data.health.governorLimits.soql %>%
+                        </span>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">DML Usage</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: <%= data.health.governorLimits.dml %>%"></div>
+                        </div>
+                        <span class="health-value">
+                            <%= data.health.governorLimits.dml %>%
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- License Usage Card -->
+            <div class="metric-card">
+                <h2>License Usage</h2>
+                <div class="chart-container">
+                    <canvas id="licenseChart"></canvas>
+                </div>
+            </div>
+
+            <!-- API Usage Card -->
+            <div class="metric-card">
+                <h2>API Usage</h2>
+                <div class="metric-summary">
+                    <span class="total-count">
+                        <%= Math.round((data.apiUsage.daily / data.apiUsage.limit) * 100) %>%
+                    </span>
+                    <span class="label">Daily Limit Used</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="apiChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Security Health Score Card -->
+            <div class="metric-card security-card">
+                <h2>Security Health Check</h2>
+                <div class="metric-summary">
+                    <span class="total-count"
+                        style="color: <%= data.securityScore >= 80 ? '#2ecc71' : data.securityScore >= 60 ? '#f39c12' : '#e74c3c' %>">
+                        <%= data.securityScore %>
+                    </span>
+                    <span class="label">Score (out of 100)</span>
+                </div>
+                <div class="security-status">
+                    <% if (data.securityScore>= 80) { %>
+                        <span class="status-badge good">Excellent</span>
+                        <% } else if (data.securityScore>= 60) { %>
+                            <span class="status-badge warning">Needs Attention</span>
+                            <% } else { %>
+                                <span class="status-badge critical">Critical</span>
+                                <% } %>
+                </div>
+            </div>
+
+            <!-- Data Storage Card -->
+            <div class="metric-card">
+                <h2>Data Storage</h2>
+                <div class="chart-container">
+                    <canvas id="storageChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Automation Health Card -->
+            <div class="metric-card" style="grid-column: span 2;">
+                <h2>Automation Components</h2>
+                <div class="chart-container">
+                    <canvas id="automationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Custom Metadata Card -->
+            <div class="metric-card custom-meta-card">
+                <h2>Custom Metadata</h2>
+                <div class="custom-meta-grid">
+                    <div class="meta-item">
+                        <div class="meta-count">
+                            <%= data.customMetadata.customObjects %>
+                        </div>
+                        <div class="meta-label">Custom Objects</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-count">
+                            <%= data.customMetadata.customFields %>
+                        </div>
+                        <div class="meta-label">Custom Fields</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-count">
+                            <%= data.customMetadata.validationRules %>
+                        </div>
+                        <div class="meta-label">Validation Rules</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-count">
+                            <%= data.customMetadata.customSettings %>
+                        </div>
+                        <div class="meta-label">Custom Settings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data from server
+        const flowData = {
+            labels: ['Screen', 'Auto-Launched', 'Triggered'],
+            datasets: [{
+                data: [<%= data.flows.screen %>, <%= data.flows.autoLaunched %>, <%= data.flows.triggered %>],
+                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+                borderWidth: 0
+            }]
+        };
+
+        const apexData = {
+            labels: ['Invocable', 'Controller', 'Test', 'Batch/Queueable'],
+            datasets: [{
+                data: [<%= data.apex.invocable %>, <%= data.apex.controller %>, <%= data.apex.test %>, <%= data.apex.batch %>],
+                backgroundColor: ['#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'],
+                borderWidth: 0
+            }]
+        };
+
+        // Charts Configuration
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                }
+            },
+            cutout: '70%'
+        };
+
+        // Render Charts
+        new Chart(document.getElementById('flowsChart'), {
+            type: 'doughnut',
+            data: flowData,
+            options: commonOptions
+        });
+
+        new Chart(document.getElementById('apexChart'), {
+            type: 'doughnut',
+            data: apexData,
+            options: commonOptions
+        });
+
+        // License Chart
+        new Chart(document.getElementById('licenseChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Salesforce', 'Platform', 'Integration'],
+                datasets: [{
+                    label: 'Used',
+                    data: [<%= data.licenses.salesforce.used %>, <%= data.licenses.platform.used %>, <%= data.licenses.integration.used %>],
+                    backgroundColor: '#3498db'
+                }, {
+                    label: 'Total',
+                    data: [<%= data.licenses.salesforce.total %>, <%= data.licenses.platform.total %>, <%= data.licenses.integration.total %>],
+                    backgroundColor: '#ecf0f1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true },
+                    y: { stacked: true }
+                }
+            }
+        });
+
+        // API Usage Chart
+        new Chart(document.getElementById('apiChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Used', 'Remaining'],
+                datasets: [{
+                    data: [<%= data.apiUsage.daily %>, <%= data.apiUsage.limit - data.apiUsage.daily %>],
+                    backgroundColor: ['#e74c3c', '#ecf0f1'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                circumference: 180,
+                rotation: -90,
+                cutout: '80%'
+            }
+        });
+
+        // Data Storage Chart
+        new Chart(document.getElementById('storageChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Data Storage', 'File Storage'],
+                datasets: [{
+                    label: 'Used (GB)',
+                    data: [<%= data.dataStorage.dataUsed %>, <%= data.dataStorage.fileUsed %>],
+                    backgroundColor: '#3498db'
+                }, {
+                    label: 'Available (GB)',
+                    data: [<%= data.dataStorage.dataTotal - data.dataStorage.dataUsed %>, <%= data.dataStorage.fileTotal - data.dataStorage.fileUsed %>],
+                    backgroundColor: '#ecf0f1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Automation Chart
+        new Chart(document.getElementById('automationChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Workflows', 'Process Builders', 'Flows', 'Triggers'],
+                datasets: [{
+                    label: 'Count',
+                    data: [<%= data.automation.workflows %>, <%= data.automation.processBuilders %>, <%= data.automation.flows %>, <%= data.automation.triggers %>],
+                    backgroundColor: ['#9b59b6', '#e67e22', '#1abc9c', '#34495e']
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <%- include('partials/footer') %>
