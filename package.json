@@ -1,16 +1,17 @@
 {
-  "name": "spice-of-india",
+  "name": "salesforce-health-dashboard",
   "version": "1.0.0",
-  "description": "A responsive Indian restaurant website",
+  "description": "A comprehensive Salesforce organization health monitoring dashboard",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "restaurant",
-    "indian",
-    "website",
+    "salesforce",
+    "dashboard",
+    "monitoring",
+    "health-check",
     "express",
     "ejs"
   ],

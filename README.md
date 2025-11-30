@@ -1,6 +1,6 @@
-# Spice of India - Restaurant Website
+# Salesforce Health Dashboard
 
-A responsive web application for an Indian restaurant, built with Express.js and EJS templating. The application includes a comprehensive Salesforce organization metrics dashboard for monitoring system health, automation, and resource usage.
+A comprehensive web application for monitoring Salesforce organization metrics, built with Express.js and EJS templating. The dashboard provides real-time visualization of system health, automation, resource usage, and org analytics.
 
 ## 🚀 Features
 
@@ -15,8 +15,7 @@ A responsive web application for an Indian restaurant, built with Express.js and
   - Automation overview (Workflows, Process Builders, Flows, Triggers)
   - Custom metadata statistics
 
-- **Menu Page**: Restaurant menu display
-- **Contact Page**: Customer contact information and forms
+- **Contact Page**: Contact information and inquiry forms
 - **Responsive Design**: Mobile-friendly interface with modern CSS
 
 ## 🛠️ Technology Stack
@@ -85,7 +84,7 @@ website/
 ## 🌐 Available Routes
 
 - **`/`** - Main dashboard with Salesforce org metrics
-- **`/menu`** - Restaurant menu page
+- **`/menu`** - Additional menu/navigation page
 - **`/contact`** - Contact information page
 
 ## 📊 Dashboard Metrics
@@ -125,4 +124,4 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## 📧 Contact
 
-For any questions or feedback, please use the contact page on the website.
+For any questions or feedback, please use the contact page or reach out through GitHub.
